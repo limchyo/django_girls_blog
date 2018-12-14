@@ -26,7 +26,7 @@ def post_new(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            post.published_date = timezone.now()
+            # post.published_date = timezone.now()
             post.save()
             return redirect("post_detail", post.id) #post_detail URL에서 id값 먹인 곳
 
@@ -43,11 +43,16 @@ def post_edit(request, pk):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            post.published_date = timezone.now()
+            # post.published_date = timezone.now()
             post.save()
             return redirect("post_detail", post.id)
     else:
         form = PostForm(instance=post)
-        
+
     ctx = { "form" : form }
     return render(request, "post_edit.html", ctx)
+
+def post_draft_list(request):
+    posts = Post.objects.filter(published_date__isnull=True).order_by('created_date')
+    ctx = { "posts" : posts}
+    return render(request, 'post_draft_list.html', ctx)
