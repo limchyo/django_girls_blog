@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import Post
@@ -20,6 +21,7 @@ def post_detail(request, pk):
     ctx.update({ "post" : post })
     return render(request, "post_detail.html", ctx)
 
+@login_required
 def post_new(request):
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
@@ -36,6 +38,7 @@ def post_new(request):
     ctx = { "form" : form }
     return render(request, "post_edit.html", ctx)
 
+@login_required
 def post_edit(request, pk):
     post = get_object_or_404(Post, id=pk) # 객체가 없는 경우 404 처리
     if request.method == "POST":
@@ -52,16 +55,19 @@ def post_edit(request, pk):
     ctx = { "form" : form }
     return render(request, "post_edit.html", ctx)
 
+@login_required
 def post_draft_list(request):
     posts = Post.objects.filter(published_date__isnull=True).order_by('created_date')
     ctx = { "posts" : posts}
     return render(request, 'post_draft_list.html', ctx)
 
+@login_required
 def post_publish(request, pk):
     post = get_object_or_404(Post, id=pk)
     post.publish()
     return redirect('post_detail', pk=pk)
 
+@login_required
 def post_remove(request, pk):
     post = get_object_or_404(Post, id=pk)
     post.delete()

@@ -17,6 +17,10 @@
       <a href="{% url 'post_draft_list' %}" class="top-menu">
         <span class="glyphicon glyphicon-edit"></span>
       </a>
+      {% else %}
+      <a href="{% url 'login' %}?next={{ request.path }}" class="top-menu">
+        <span class="glyphicon glyphicon-lock"></span>
+      </a>
       {% endif %}
       <h1><a href="/">Hello Django Girls.</a></h1>
     </div>
